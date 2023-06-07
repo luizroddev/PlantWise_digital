@@ -29,7 +29,7 @@ RUN mkdir -p $WORK_DIR
 WORKDIR $WORK_DIR
 
 # Copiando o arquivo .jar da etapa de compilação para a etapa final
-COPY --from=build /app/target/*.jar $WORK_DIR/app.jar
+COPY target/PlantWise-0.0.1-SNAPSHOT.jar $WORK_DIR/app.jar
 
 # Expondo a porta 8080 para permitir conexões externas
 EXPOSE 8080
@@ -37,7 +37,6 @@ EXPOSE 8080
 # VOLUME para persistência
 VOLUME /app-data
 
-CMD ["cd target", "dir"]
+ENTRYPOINT [ "java", "-jar", "app.jar" ]
 
-RUN chmod 755 $WORK_DIR/*.jar
 # Comando para iniciar a aplicação Spring Boot
