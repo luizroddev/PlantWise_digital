@@ -18,7 +18,7 @@ public class PlantImageService {
 
         HttpEntity<PlantImageRequest> requestEntity = new HttpEntity<>(plantImageRequest, headers);
         ResponseEntity<PlantImageResponse> responseEntity = restTemplate.exchange(
-                "http://localhost:5000/download",
+                "http://localhost:5000/analyze",
                 HttpMethod.POST,
                 requestEntity,
                 PlantImageResponse.class

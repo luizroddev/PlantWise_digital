@@ -38,10 +38,6 @@ public class AnaliseService {
     @Autowired
     PagedResourcesAssembler<Object> assembler;
 
-    public PlantImageResponse analyzePlantImage(PlantImageRequest plantImageRequest) {
-        return plantImageService.analyzePlantImage(plantImageRequest);
-    }
-
     public AnaliseResponse registrarAnaliseUsuario(Long id, PlantImageRequest plantImageRequest) {
 
         PlantImageResponse plantImageResponse = plantImageService.analyzePlantImage(plantImageRequest);
@@ -61,23 +57,6 @@ public class AnaliseService {
         usuario.getAnalises().add(analise);
         usuarioRepository.save(usuario);
         return analise;
-    }
-
-    public List<Analise> findAnalisesPorUsuarioId(Long usuarioId) {
-        log.info("Buscando análises por ID de usuário");
-        Usuario usuario = usuarioRepository.findById(usuarioId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado"));
-        return analiseRepository.findByUsuarioId(usuario.getId());
-    }
-
-    public List<Analise> findAnalisesPorDoenca(String doenca) {
-        log.info("Buscando análises por doença");
-        return analiseRepository.findAllByDoenca(doenca);
-    }
-
-    public List<Analise> findAnalisesPorPlantaEUsuario(String planta, String nome) {
-        log.info("Buscando análises por planta e nome do usuário");
-        return analiseRepository.findAllByPlantaAndUsuarioNome(planta, nome);
     }
 
     public PagedModel<EntityModel<Object>> findAllAnalises(String planta, Pageable pageable) {

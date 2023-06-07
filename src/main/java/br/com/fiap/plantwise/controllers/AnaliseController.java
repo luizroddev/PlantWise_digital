@@ -30,14 +30,7 @@ public class AnaliseController {
     @Autowired
     PlantImageService plantImageService;
 
-    @PostMapping("image")
-    public ResponseEntity<PlantImageResponse> analisarImagem(@RequestBody PlantImageRequest plantImageRequest) {
-        PlantImageResponse plantImageResponse = plantImageService.analyzePlantImage(plantImageRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).body(plantImageResponse);
-    }
-
-
-    @PostMapping("usuario/{id}")
+     @PostMapping("usuario/{id}")
     public ResponseEntity<AnaliseResponse> registrarAnaliseUsuario(@PathVariable Long id, @RequestBody PlantImageRequest plantImageRequest) {
         AnaliseResponse analise = analiseService.registrarAnaliseUsuario(id, plantImageRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(analise);
@@ -47,21 +40,6 @@ public class AnaliseController {
     public ResponseEntity<Analise> registrar(@PathVariable Long id, @RequestBody @Valid Analise analise) {
         Analise novaAnalise = analiseService.registrar(id, analise);
         return ResponseEntity.status(HttpStatus.CREATED).body(novaAnalise);
-    }
-
-    @GetMapping("usuario/{id}")
-    public List<Analise> findAllByUsuarioId(@PathVariable("id") Long usuarioId) {
-        return analiseService.findAnalisesPorUsuarioId(usuarioId);
-    }
-
-    @GetMapping("doenca/{doenca}")
-    public List<Analise> findAllByDoenca(@PathVariable("doenca") String doenca) {
-        return analiseService.findAnalisesPorDoenca(doenca);
-    }
-
-    @GetMapping("planta/{planta}/usuario/{nome}")
-    public List<Analise> findAllByPlantaAndUsuarioNome(@PathVariable String planta, @PathVariable String nome) {
-        return analiseService.findAnalisesPorPlantaEUsuario(planta, nome);
     }
 
     @GetMapping

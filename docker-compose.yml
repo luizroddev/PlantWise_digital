@@ -1,33 +1,25 @@
-# Use a imagem oficial do Maven 3.6.1 em uma versão slim como imagem base
-FROM maven:3.6.1-jdk-11-slim AS build
-  
-  # Defina o diretório de trabalho no contêiner
-WORKDIR /app
-  
-  # Copie o pom.xml e instale as dependências
-COPY pom.xml ./
-RUN mvn dependency:go-offline
-  
-  # Copie o restante do código da aplicação
-COPY src ./src
-  
-  # Faça o build do projeto
-RUN mvn package
-  
-  # Use a imagem oficial do OpenJDK 11 em uma versão alpine como imagem base
-FROM openjdk:11-jre-slim
-
-WORKDIR /app
-
-ONBUILD ADD . /app
-
-ONBUILD RUN mvn install
-  
-  # Copie o JAR do estágio de build
-COPY --from=build /app/target/*.jar app.jar
-  
-  # Exponha a porta 8080
-EXPOSE 8080
-  
-  # Comando para rodar a aplicação
-CMD ["java", "-jar", "/app/app.jar"]
+version: '3'
+services:
+  app:
+    build: .
+    ports:
+      - "8080:8080"
+    volumes:
+      - .:/app
+      - /app/target
+      - app-data:/app-data
+    depends_on:
+      - db
+  db:
+    image: "postgres:14-alpine"
+    ports:
+      - "5433:5433"
+    volumes:
+      - "postgres_data:/var/lib/postgresql/data"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=123
+      - POSTGRES_DB=miadb
+volumes:
+  postgres_data:
+  app-data:

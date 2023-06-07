@@ -1,167 +1,208 @@
-## Endpoints
+# PlantWise API - README
+
+Este README fornece instruções para instalação e execução da API PlantWise, além de um guia sobre como testar os recursos, os formatos JSON utilizados e os endpoints disponíveis.
+
+## Instalação
+
+Para instalar e executar a API PlantWise, siga as etapas abaixo:
+
+1. Certifique-se de ter o JDK (Java Development Kit) instalado em sua máquina. Você pode baixá-lo e instalá-lo a partir do site oficial da Oracle.
+2. Faça o download do código-fonte da API PlantWise do repositório oficial.
+3. Descompacte o arquivo baixado em uma pasta de sua preferência.
+4. Abra sua IDE favorita (recomendamos IntelliJ IDEA) e navegue até a pasta raiz da API PlantWise.
+
+## Execução
+
+Após a conclusão da etapa de instalação, siga as instruções abaixo para executar a API PlantWise:
+
+1. Na mesma IDE, inicie a aplicação Maven.
+2. Aguarde até que a API seja iniciada. Você verá uma mensagem indicando que o servidor está em execução na porta especificada (geralmente, a porta 8080).
+3. A API PlantWise está agora em execução e pronta para receber solicitações.
+
+## Testando os Recursos
+
+A API PlantWise fornece os seguintes recursos e endpoints:
 
 ### Usuários
 
-#### `POST /api/usuarios/registrar`
-Cria um novo usuário.
+#### Criar um usuário
 
-**Parâmetros do corpo:**
-- `nome` (string, obrigatório): Nome do usuário.
-- `email` (string, obrigatório): Endereço de e-mail do usuário.
-- `senha` (string, obrigatório): Senha do usuário.
+**Endpoint:** `POST /api/usuarios/registrar`
+
+Este endpoint permite criar um novo usuário.
+
+**Parâmetros do corpo (formato JSON):**
+```json
+{
+  "nome": "Pedro",
+  "email": "teste@gmail.com",
+  "senha": "Senha123"
+}
+```
 
 **Respostas:**
 - `201 Created`: Usuário criado com sucesso.
 - `400 Bad Request`: Parâmetros inválidos.
 
-#### `POST /api/usuarios/login`
-Realiza o login do usuário.
+#### Realizar login
 
-**Parâmetros do corpo:**
-- `email` (string, obrigatório): Endereço de e-mail do usuário.
-- `senha` (string, obrigatório): Senha do usuário.
+**Endpoint:** `POST /api/usuarios/login`
 
-**Respostas:**
-- `200 OK`: Login realizado com sucesso. Retorna o token de autenticação.
-- `400 Bad Request`: Parâmetros inválidos.
-- `404 Not Found`: Usuário não encontrado.
+Este endpoint permite realizar o login de um usuário e retorna um token de autenticação.
 
-#### `GET /api/usuarios`
-Lista todos os usuários cadastrados.
+**Parâmetros do corpo (formato JSON):**
+```json
+{
+  "email": "teste@gmail.com",
+  "senha": "Senha123"
+}
+```
 
-**Parâmetros da consulta:**
-- `busca` (string, opcional): Termo de busca para filtrar os usuários.
-- `page` (int, opcional): Número da página a ser retornada. Padrão: 0.
-- `size` (int, opcional): Tamanho da página. Padrão: 5.
-- `sort` (string, opcional): Ordenação dos resultados. Exemplo: `sort=nome,asc`.
+**Resposta:**
+- `200 OK`: Login realizado com sucesso. O token de autenticação será retornado no corpo da resposta.
 
-**Respostas:**
-- `200 OK`: Retorna uma lista paginada de usuários.
-- `400 Bad Request`: Parâmetros inválidos.
+#### Obter todos os usuários
 
-#### `GET /api/usuarios/{id}`
-Obtém informações de um usuário específico.
+**Endpoint:** `GET /api/usuarios`
 
-**Parâmetros do caminho:**
-- `id` (long, obrigatório): ID do usuário.
+Este endpoint retorna todos os usuários registrados.
 
-**Respostas:**
-- `200 OK`: Retorna as informações do usuário.
-- `404 Not Found`: Usuário não encontrado.
+**Parâmetros de consulta:**
+- `nome` (opcional): O nome do usuário para filtrar os resultados.
+- `page` (opcional): O número da página a ser retornada (padrão: 0).
+- `size` (opcional): O número de registros por página (padrão: 5).
 
-#### `DELETE /api/usuarios/{id}`
-Exclui um usuário.
+#### Obter um usuário pelo ID
 
-**Parâmetros do caminho:**
-- `id` (long, obrigatório): ID do usuário.
+**Endpoint:** `GET /api/usuarios/{id}`
 
-**Respostas:**
-- `204 No Content`: Usuário excluído com sucesso.
-- `404 Not Found`: Usuário não encontrado.
+Este endpoint retorna um usuário específico com base em seu ID.
+
+**Parâmetros da URL:**
+- `{id}` (obrigatório): O ID do usuário a ser retornado.
+
+#### Excluir um usuário
+
+**Endpoint:** `DELETE /api/usuarios/{id}`
+
+Este endpoint exclui um usuário com base em seu ID.
+
+**Parâmetros da URL:**
+- `{id}` (obrigatório): O ID do usuário a ser excl
+
+uído.
 
 ### Análises
 
-#### `POST /api/analises/image`
-Realiza a análise de uma imagem de planta.
+#### Registrar uma análise de usuário
 
-**Parâmetros do corpo:**
-- `userId` (long, obrigatório): ID do usuário.
-- `image` (string, obrigatório): Imagem da planta (caminho ou base64).
+**Endpoint:** `POST /api/analises/usuario/{id}`
+
+Este endpoint permite que um usuário registre uma análise de planta.
+
+**Parâmetros da URL:**
+- `{id}` (obrigatório): O ID do usuário que está registrando a análise.
+
+**Parâmetros do corpo (formato JSON):**
+```json
+{
+  "planta": "Nome da planta",
+  "doencaEncontrada": true,
+  "doenca": "Nome da doença"
+}
+```
 
 **Respostas:**
-- `201 Created`: Análise da imagem realizada com sucesso. Retorna os resultados da análise.
+- `201 Created`: Análise registrada com sucesso.
 - `400 Bad Request`: Parâmetros inválidos.
 
-#### `POST /api/analises/usuario/{id}`
-Registra uma análise de planta associada a um usuário.
+#### Registrar uma análise
 
-**Parâmetros do caminho:**
-- `id` (long, obrigatório): ID do usuário.
+**Endpoint:** `POST /api/analises/{id}`
 
-**Parâmetros do corpo:**
-- `userId` (long, obrigatório): ID do usuário.
-- `image` (string, obrigatório): Imagem da planta (caminho ou base64).
+Este endpoint permite registrar uma análise vinculada a um usuário específico.
+
+**Parâmetros da URL:**
+- `{id}` (obrigatório): O ID do usuário ao qual a análise será associada.
+
+**Parâmetros do corpo (formato JSON):**
+```json
+{
+  "planta": "Nome da planta",
+  "doencaEncontrada": true,
+  "doenca": "Nome da doença (opcional)"
+}
+```
 
 **Respostas:**
-- `201 Created`: Análise registrada com sucesso. Retorna os resultados da análise.
+- `201 Created`: Análise registrada com sucesso.
 - `400 Bad Request`: Parâmetros inválidos.
 
-#### `POST /api/analises/{
+#### Obter todas as análises
 
-id}`
-Registra uma nova análise de planta.
+**Endpoint:** `GET /api/analises`
 
-**Parâmetros do caminho:**
-- `id` (long, obrigatório): ID da análise.
+Este endpoint retorna todas as análises registradas.
 
-**Parâmetros do corpo:**
-- `userId` (long, obrigatório): ID do usuário.
-- `image` (string, obrigatório): Imagem da planta (caminho ou base64).
+**Parâmetros de consulta:**
+- `planta` (opcional): O nome da planta para filtrar as análises.
+- `page` (opcional): O número da página a ser retornada (padrão: 0).
+- `size` (opcional): O número de registros por página (padrão: 5).
 
-**Respostas:**
-- `201 Created`: Análise registrada com sucesso. Retorna os resultados da análise.
-- `400 Bad Request`: Parâmetros inválidos.
+#### Obter uma análise pelo ID
 
-#### `GET /api/analises/usuario/{id}`
-Lista todas as análises realizadas por um usuário específico.
+**Endpoint:** `GET /api/analises/{id}`
 
-**Parâmetros do caminho:**
-- `id` (long, obrigatório): ID do usuário.
+Este endpoint retorna uma análise específica com base em seu ID.
 
-**Respostas:**
-- `200 OK`: Retorna uma lista de análises realizadas pelo usuário.
-- `404 Not Found`: Usuário não encontrado.
+**Parâmetros da URL:**
+- `{id}` (obrigatório): O ID da análise a ser retornada.
 
-#### `GET /api/analises/doenca/{doenca}`
-Lista todas as análises relacionadas a uma doença específica.
+#### Excluir uma análise
 
-**Parâmetros do caminho:**
-- `doenca` (string, obrigatório): Nome da doença.
+**Endpoint:** `DELETE /api/analises/{id}`
 
-**Respostas:**
-- `200 OK`: Retorna uma lista de análises relacionadas à doença.
-- `404 Not Found`: Nenhuma análise encontrada.
+Este endpoint exclui uma análise com base em seu ID.
 
-#### `GET /api/analises/planta/{planta}/usuario/{nome}`
-Lista todas as análises relacionadas a uma planta e associadas a um usuário específico.
+**Parâmetros da URL:**
+- `{id}` (obrigatório): O ID da análise a ser excluída.
 
-**Parâmetros do caminho:**
-- `planta` (string, obrigatório): Nome da planta.
-- `nome` (string, obrigatório): Nome do usuário.
+## Formato JSON
 
-**Respostas:**
-- `200 OK`: Retorna uma lista de análises relacionadas à planta e associadas ao usuário.
-- `404 Not Found`: Nenhuma análise encontrada.
+A API PlantWise utiliza o formato JSON para enviar e receber dados. Abaixo estão exemplos de como os objetos devem ser estruturados em JSON.
 
-#### `GET /api/analises`
-Lista todas as análises.
+### Objeto de Análise
 
-**Parâmetros da consulta:**
-- `planta` (string, opcional): Nome da planta para filtrar as análises.
-- `page` (int, opcional): Número da página a ser retornada. Padrão: 0.
-- `size` (int, opcional): Tamanho da página. Padrão: 5.
-- `sort` (string, opcional): Ordenação dos resultados. Exemplo: `sort=planta,asc`.
+```json
+{
+  "id": 1,
+  "usuario": {
+    "id": 1,
+    "nome": "Nome do usuário",
+    "email": "email@example.com",
+    "senha": "Senha123"
+  },
+  "doencaEncontrada": true,
+  "doenca": "Nome da doença",
+  "planta": "Nome da planta"
+}
+```
 
-**Respostas:**
-- `200 OK`: Retorna uma lista paginada de análises.
-- `400 Bad Request`: Parâmetros inválidos.
+### Objeto de Usuário
 
-#### `GET /api/analises/{id}`
-Obtém informações de uma análise específica.
-
-**Parâmetros do caminho:**
-- `id` (long, obrigatório): ID da análise.
-
-**Respostas:**
-- `200 OK`: Retorna as informações da análise.
-- `404 Not Found`: Análise não encontrada.
-
-#### `DELETE /api/analises/{id}`
-Exclui uma análise.
-
-**Parâmetros do caminho:**
-- `id` (long, obrigatório): ID da análise.
-
-**Respostas:**
-- `204 No Content`: Análise excluída com sucesso.
-- `404 Not Found`: Análise não encontrada.
+```json
+{
+  "id": 1,
+  "nome": "Nome do usuário",
+  "email": "email@example.com",
+  "senha": "Senha123",
+  "analises": [
+    {
+      "id": 1,
+      "doencaEncontrada": true,
+      "doenca": "Nome da doença",
+      "planta": "Nome da planta"
+    }
+  ]
+}
+```
